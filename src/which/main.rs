@@ -65,8 +65,7 @@ impl App {
         }
     }
 
-    fn get_options(&mut self) {
-        let args: Vec<String> = args().collect();
+    fn get_options(&mut self, args: Vec<String>) {
         self.program_name = args[0].clone();
 
         let mut opts = Options::new();
@@ -146,7 +145,7 @@ impl App {
 
 fn main() {
     let mut app = App::new();
-    app.get_options();
+    app.get_options(args().collect());
     app.run();
     app.finish();
 }
