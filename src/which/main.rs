@@ -12,7 +12,7 @@ struct App {
     all: bool,
     command_vec: Vec<String>,
     rv: i32,
-    done: bool
+    finished: bool
 }
 
 impl App {
@@ -24,8 +24,13 @@ impl App {
             all: false,
             command_vec: [].to_vec(),
             rv: 0,
-            done: false
+            finished: false
         }
+    }
+
+    fn done(&mut self, rv: i32) {
+        self.rv = rv;
+        self.finished = true;
     }
 
     #[cfg(windows)]
@@ -46,18 +51,16 @@ impl App {
         var_os("PATH").unwrap()
     }
 
-    fn print_usage(&self, opts: Options, message: Option<getopts::Fail>) -> ! {
+    fn print_usage(&self, opts: Options, message: Option<getopts::Fail>) {
         let brief = format!("Usage: {} [options] COMMAND", self.program_name);
 
         match message {
             Some(message) => {
                 eprintln!("{}: {}", self.program_name, message);
                 eprint!("{}", opts.usage(&brief));
-                exit(1)
             },
             None => {
                 print!("{}", opts.usage(&brief));
-                exit(0)
             }
         }
     }
@@ -77,23 +80,28 @@ impl App {
 
         let matches = match opts.parse(&args[1..]) {
             Ok(m)  => m,
-            Err(f) => self.print_usage(opts, Some(f))
+            Err(f) => {
+                self.print_usage(opts, Some(f));
+                self.done(1);
+                return
+            }
         };
 
         if matches.opt_present("help") {
-            self.print_usage(opts, None)
+            self.print_usage(opts, None);
+            self.done(0);
+            return
         }
 
         if matches.opt_present("version") {
             println!("Rusty which v1.00, Copyright (c) 2019 Graham Ollis.");
-            self.done = true;
+            self.done(0);
             return
         }
 
         if matches.free.is_empty() {
             eprintln!("{}: Too few arguments", self.program_name);
-            self.done = true;
-            self.rv = 1;
+            self.done(1);
             return ;
         }
 
@@ -106,7 +114,7 @@ impl App {
     }
 
     fn run(&mut self) {
-        if self.done {
+        if self.finished {
             return
         }
 
@@ -127,7 +135,7 @@ impl App {
             }
         }
 
-        self.done = true
+        self.done(0);
     }
 
     fn finish(&self) {
