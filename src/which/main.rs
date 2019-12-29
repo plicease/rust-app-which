@@ -4,6 +4,7 @@ use std::env::args;
 use std::env::var_os;
 use std::ffi::OsString;
 use getopts::Options;
+use std::process::exit;
 
 struct App {
     program_name: String,
@@ -48,11 +49,11 @@ impl App {
             Some(message) => {
                 eprintln!("{}: {}", self.program_name, message);
                 eprint!("{}", opts.usage(&brief));
-                std::process::exit(1)
+                exit(1)
             },
             None => {
                 print!("{}", opts.usage(&brief));
-                std::process::exit(0)
+                exit(0)
             }
         }
     }
@@ -81,12 +82,12 @@ impl App {
 
         if matches.opt_present("version") {
             println!("Rusty which v1.00, Copyright (c) 2019 Graham Ollis.");
-            std::process::exit(0)
+            exit(0)
         }
 
         if matches.free.is_empty() {
             eprintln!("{}: Too few arguments", self.program_name);
-            std::process::exit(1)
+            exit(1)
         }
 
         if matches.opt_defined("skip-dot") && matches.opt_present("skip-dot") {
@@ -115,8 +116,8 @@ impl App {
         }
     }
 
-    fn exit(&self) {
-        std::process::exit(self.rv);
+    fn done(&self) {
+        exit(self.rv);
     }
 
 }
@@ -125,5 +126,5 @@ fn main() {
     let mut app = App::new();
     app.get_options();
     app.run();
-    app.exit();
+    app.done();
 }
