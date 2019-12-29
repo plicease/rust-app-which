@@ -2,14 +2,14 @@ use which::which_in;
 use std::env::current_dir;
 use std::env::args;
 use std::env::var_os;
-use std::process::exit;
 use std::ffi::OsString;
 use getopts::Options;
 
 struct App {
     program_name: String,
     skip_dot: bool,
-    command_vec: Vec<String>
+    command_vec: Vec<String>,
+    rv: i32
 }
 
 impl App {
@@ -19,6 +19,7 @@ impl App {
             program_name: String::from(""),
             skip_dot: false,
             command_vec: [].to_vec(),
+            rv: 0
         }
     }
 
@@ -47,11 +48,11 @@ impl App {
             Some(message) => {
                 eprintln!("{}: {}", self.program_name, message);
                 eprint!("{}", opts.usage(&brief));
-                exit(1)
+                std::process::exit(1)
             },
             None => {
                 print!("{}", opts.usage(&brief));
-                exit(0)
+                std::process::exit(0)
             }
         }
     }
@@ -80,12 +81,12 @@ impl App {
 
         if matches.opt_present("version") {
             println!("Rusty which v1.00, Copyright (c) 2019 Graham Ollis.");
-            exit(0)
+            std::process::exit(0)
         }
 
         if matches.free.is_empty() {
             eprintln!("{}: Too few arguments", self.program_name);
-            exit(1)
+            std::process::exit(1)
         }
 
         if matches.opt_defined("skip-dot") && matches.opt_present("skip-dot") {
@@ -95,8 +96,7 @@ impl App {
         self.command_vec = matches.free;
     }
 
-    fn run(&self) -> i32 {
-        let mut rv = 0;
+    fn run(&mut self) {
         let cwd = current_dir().unwrap();
         let path = self.get_path();
 
@@ -109,12 +109,14 @@ impl App {
                 },
                 Err(_) => {
                     eprintln!("{}: Command not found", program_name);
-                    rv = 1;
+                    self.rv = 1
                 }
             }
         }
+    }
 
-        rv
+    fn exit(&self) {
+        std::process::exit(self.rv);
     }
 
 }
@@ -122,6 +124,6 @@ impl App {
 fn main() {
     let mut app = App::new();
     app.get_options();
-    let rv = app.run();
-    exit(rv);
+    app.run();
+    app.exit();
 }
