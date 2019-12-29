@@ -10,7 +10,8 @@ struct App {
     program_name: String,
     skip_dot: bool,
     command_vec: Vec<String>,
-    rv: i32
+    rv: i32,
+    done: bool
 }
 
 impl App {
@@ -20,7 +21,8 @@ impl App {
             program_name: String::from(""),
             skip_dot: false,
             command_vec: [].to_vec(),
-            rv: 0
+            rv: 0,
+            done: false
         }
     }
 
@@ -82,12 +84,15 @@ impl App {
 
         if matches.opt_present("version") {
             println!("Rusty which v1.00, Copyright (c) 2019 Graham Ollis.");
-            exit(0)
+            self.done = true;
+            return
         }
 
         if matches.free.is_empty() {
             eprintln!("{}: Too few arguments", self.program_name);
-            exit(1)
+            self.done = true;
+            self.rv = 1;
+            return ;
         }
 
         if matches.opt_defined("skip-dot") && matches.opt_present("skip-dot") {
@@ -98,6 +103,10 @@ impl App {
     }
 
     fn run(&mut self) {
+        if self.done {
+            return
+        }
+
         let cwd = current_dir().unwrap();
         let path = self.get_path();
 
@@ -114,9 +123,11 @@ impl App {
                 }
             }
         }
+
+        self.done = true
     }
 
-    fn done(&self) {
+    fn finish(&self) {
         exit(self.rv);
     }
 
@@ -126,5 +137,5 @@ fn main() {
     let mut app = App::new();
     app.get_options();
     app.run();
-    app.done();
+    app.finish();
 }
