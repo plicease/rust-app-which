@@ -9,7 +9,7 @@ fn main() {
     /* TODO:
        --version
        --help
-       --skip-dot
+       --skip-dot  /* FIXME currently we don't search . */
        --all | -a (also where)
     */
 
@@ -30,7 +30,7 @@ fn main() {
     }
 
     if count == 0 {
-        /* TODO: this should (maybe) be argv[0] */
+        /* TODO: this should (maybe) be using argv[0] instead of 'which' */
         eprintln!("which: Too few arguments");
         exit(1);
     }
