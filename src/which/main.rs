@@ -15,15 +15,13 @@ fn main() {
 
     for program_name in args().skip(1) {
 
-        let diag_name = program_name.clone();
-
-        match which(program_name) {
+        match which(program_name.clone()) {
             Ok(path) => {
                 let path = path.to_string_lossy();
                 println!("{}", path);
             },
             Err(_) => {
-                eprintln!("{}: Command not found", diag_name);
+                eprintln!("{}: Command not found", program_name);
                 error = 1;
             }
         }
