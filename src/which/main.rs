@@ -20,7 +20,7 @@ fn get_path(skip_dot: bool) -> OsString {
 }
 
 #[cfg(unix)]
-fn get_path(skip_dot: bool) -> OsString {
+fn get_path(_skip_dot: bool) -> OsString {
     var_os("PATH").unwrap()
 }
 
@@ -81,7 +81,7 @@ fn main() {
     let m = get_options();
 
     let cwd = current_dir().unwrap();
-    let path = get_path(m.opt_present("skip-dot"));
+    let path = get_path(m.opt_defined("skip-dot") && m.opt_present("skip-dot"));
 
     for program_name in m.free {
 
