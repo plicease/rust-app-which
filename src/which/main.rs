@@ -21,13 +21,14 @@ fn main() {
             Ok(path) => {
                 let path = path.to_string_lossy();
                 println!("{}", path);
-                count += 1;
             },
             Err(_) => {
                 eprintln!("{}: Command not found", diag_name);
                 error = 1;
             }
         }
+
+        count += 1;
     }
 
     if count == 0 {
