@@ -9,6 +9,7 @@ use std::process::exit;
 struct App {
     program_name: String,
     skip_dot: bool,
+    all: bool,
     command_vec: Vec<String>,
     rv: i32,
     done: bool
@@ -20,6 +21,7 @@ impl App {
         App {
             program_name: String::from(""),
             skip_dot: false,
+            all: false,
             command_vec: [].to_vec(),
             rv: 0,
             done: false
@@ -99,6 +101,7 @@ impl App {
             self.skip_dot = true
         }
 
+        self.all = matches.opt_present("all");
         self.command_vec = matches.free;
     }
 
