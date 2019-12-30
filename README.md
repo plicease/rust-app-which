@@ -15,4 +15,5 @@ but this app does support Unix.
 ## TODO
 
  - better documentation in this README
+ - windows installer (.msi)
  - implement `--all` | `-a`
