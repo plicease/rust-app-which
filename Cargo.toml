@@ -13,3 +13,6 @@ path = "src/which/main.rs"
 [dependencies]
 which = "3.1.0"
 getopts = "0.2"
+
+[dev-dependencies]
+assert_cmd = "0.12.0"
