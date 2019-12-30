@@ -93,7 +93,7 @@ impl App {
         }
 
         if matches.opt_present("version") {
-            println!("Rusty which v1.00, Copyright (c) 2019 Graham Ollis.");
+            println!("Rusty which v1.00, Copyright (c) 2019 Graham THE Ollis.");
             self.done(0);
             return
         }
