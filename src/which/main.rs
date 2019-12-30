@@ -6,6 +6,8 @@ use std::ffi::OsString;
 use getopts::Options;
 use std::process::exit;
 
+const VERSION: &'static str = env!("CARGO_PKG_VERSION");
+
 struct App {
     program_name: String,
     skip_dot: bool,
@@ -93,7 +95,7 @@ impl App {
         }
 
         if matches.opt_present("version") {
-            println!("Rusty which v1.00, Copyright (c) 2019 Graham THE Ollis.");
+            println!("Rusty which {}, Copyright (c) 2019 Graham THE Ollis.", VERSION);
             self.done(0);
             return
         }
