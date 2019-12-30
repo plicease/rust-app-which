@@ -1,5 +1,5 @@
 [package]
-name = "which-exe"
+name = "app-which"
 version = "0.1.0"
 authors = ["Graham Ollis <plicease@cpan.org>"]
 edition = "2018"
