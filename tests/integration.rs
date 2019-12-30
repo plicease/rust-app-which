@@ -42,4 +42,30 @@ mod integration {
             .stderr("");
     }
 
+    #[test]
+    fn minus_help() {
+        let mut cmd = Command::cargo_bin("which").unwrap();
+        let assert = cmd
+            .arg("--help")
+            .assert();
+        assert
+            .success()
+            .stdout(is_match("Usage: .*which(.exe)? \\[options\\] COMMAND").unwrap())
+            .stderr("");
+    }
+
+    #[test]
+    fn minus_foo() {
+        let mut cmd = Command::cargo_bin("which").unwrap();
+        let assert = cmd
+            .arg("--foo")
+            .assert();
+        assert
+            .failure()
+            .code(1)
+            .stdout("")
+            .stderr(is_match("Usage: .*which(.exe)? \\[options\\] COMMAND").unwrap())
+            .stderr(is_match("which(.exe)?: Unrecognized option: 'foo'").unwrap());
+    }
+
 }
