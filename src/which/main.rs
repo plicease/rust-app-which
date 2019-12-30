@@ -121,6 +121,7 @@ impl App {
 
         let cwd = current_dir().unwrap();
         let path = self.get_path();
+        let mut rv = 0;
 
         for program_name in self.command_vec.iter() {
 
@@ -131,12 +132,12 @@ impl App {
                 },
                 Err(_) => {
                     eprintln!("{}: Command not found", program_name);
-                    self.rv = 1
+                    rv = 1
                 }
             }
         }
 
-        self.done(0);
+        self.done(rv);
     }
 
     fn finish(&self) {

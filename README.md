@@ -15,5 +15,4 @@ but this app does support Unix.
 ## TODO
 
  - better documentation in this README
- - tests for finding / not finding a command
  - implement `--all` | `-a`
